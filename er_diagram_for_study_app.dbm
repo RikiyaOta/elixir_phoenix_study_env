@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!--
+CAUTION: Do not modify this file unless you know what you are doing.
+         Unexpected results may occur if the code is changed deliberately.
+-->
+<dbmodel pgmodeler-ver="0.9.1" last-position="0,0" last-zoom="1"
+	 default-schema="public" default-owner="postgres">
+<database name="study_app" is-template="false" allow-conns="true">
+	<comment><![CDATA[elixir, phoenixの勉強のための環境を作ります。そのためのデータ構造です。凝ったものは作りません。]]></comment>
+</database>
+
+<schema name="public" fill-color="#e1e1e1" sql-disabled="true">
+</schema>
+
+<table name="user">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[ユーザー]]></comment>
+	<position x="160" y="240"/>
+	<column name="id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="email" not-null="true">
+		<type name="varchar" length="64"/>
+	</column>
+	<column name="password" not-null="true">
+		<type name="varchar" length="64"/>
+	</column>
+	<column name="name" not-null="true">
+		<type name="varchar" length="64"/>
+	</column>
+	<constraint name="user_pk" type="pk-constr" table="public.&quot;user&quot;">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="uq_email" type="uq-constr" table="public.&quot;user&quot;">
+		<columns names="email" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="tweet">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[ツイート]]></comment>
+	<position x="820" y="280"/>
+	<column name="id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="content" not-null="true">
+		<type name="text" length="0"/>
+		<comment><![CDATA[ツイートの内容]]></comment>
+	</column>
+	<column name="user_id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="created_at" not-null="true">
+		<type name="timestamptz" length="0"/>
+	</column>
+	<column name="created_by" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="modified_at" not-null="true">
+		<type name="timestamptz" length="0"/>
+	</column>
+	<column name="modified_by" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<constraint name="tweet_pk" type="pk-constr" table="public.tweet">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<table name="likes">
+	<schema name="public"/>
+	<role name="postgres"/>
+	<comment><![CDATA[いいねテーブル]]></comment>
+	<position x="400" y="560"/>
+	<column name="id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="user_id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="tweet_id" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<column name="created_at" not-null="true">
+		<type name="timestamptz" length="0"/>
+	</column>
+	<column name="created_by" not-null="true">
+		<type name="uuid" length="0"/>
+	</column>
+	<constraint name="uq_user_id_and_tweet_id" type="uq-constr" table="public.likes">
+		<columns names="user_id,tweet_id" ref-type="src-columns"/>
+	</constraint>
+	<constraint name="likes_pk" type="pk-constr" table="public.likes">
+		<columns names="id" ref-type="src-columns"/>
+	</constraint>
+</table>
+
+<constraint name="fk_tweet_belongs_to_user" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="CASCADE" ref-table="public.&quot;user&quot;" table="public.tweet">
+	<columns names="user_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_likes_belogs_to_user" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.&quot;user&quot;" table="public.likes">
+	<columns names="user_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<constraint name="fk_like_belongs_to_tweet" type="fk-constr" comparison-type="MATCH FULL"
+	 upd-action="NO ACTION" del-action="NO ACTION" ref-table="public.tweet" table="public.likes">
+	<columns names="tweet_id" ref-type="src-columns"/>
+	<columns names="id" ref-type="dst-columns"/>
+</constraint>
+
+<relationship name="rel_tweet_user" type="relfk"
+	 src-table="public.tweet"
+	 dst-table="public.&quot;user&quot;" reference-fk="fk_tweet_belongs_to_user"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_likes_user" type="relfk"
+	 src-table="public.likes"
+	 dst-table="public.&quot;user&quot;" reference-fk="fk_likes_belogs_to_user"
+	 src-required="false" dst-required="false"/>
+
+<relationship name="rel_likes_tweet" type="relfk"
+	 src-table="public.likes"
+	 dst-table="public.tweet" reference-fk="fk_like_belongs_to_tweet"
+	 src-required="false" dst-required="false"/>
+
+</dbmodel>
