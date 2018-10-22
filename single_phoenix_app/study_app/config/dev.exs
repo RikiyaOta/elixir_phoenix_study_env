@@ -56,4 +56,5 @@ config :study_app, StudyApp.Repo,
   database: "study_app_dev",
   hostname: "localhost",
   pool_size: 10,
-  migration_primary_key: [id: :id, type: :binary_id]
+  migration_primary_key: [id: :id, type: :binary_id],
+  migration_timestamps: [inserted_at: :created_at, updated_at: :modified_at, type: :timestamptz]
