@@ -39,3 +39,16 @@ end
 - timestamps()が上の設定のようになる。しかもautogenerate(ただ、createdとmodifiに若干ズレが生じる)
 
 がアプリケーションレベルで実現できる。
+
+### You shouldn't convert user input to atom.
+
+atomはgarbage collectionされないらしい。ユーザー入力をアトムに変換していると、メモリがすぐ枯渇してしまいそう。
+https://elixir-lang.org/getting-started/mix-otp/genserver.html
+
+### link v.s. monitor
+
+https://elixir-lang.org/getting-started/mix-otp/genserver.html#monitors-or-links
+
+linkの場合は、繋がった二つのプロセスが同時に死ぬ。双方向。
+
+monitorは一方通行。一方のプロセスのせいで他方のプロセスも死ぬことはない。
