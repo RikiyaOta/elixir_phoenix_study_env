@@ -17,6 +17,9 @@ defmodule StudyAppWeb.Router do
     pipe_through :browser # Use the default browser stack
 
     get "/", PageController, :index
+
+    get "/tweets/new/:user_id", TweetController, :new
+    post "/tweets/create/:user_id", TweetController, :create
   end
 
   # Other scopes may use custom stacks.

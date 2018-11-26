@@ -1,0 +1,23 @@
+<h1>ツイート</h1>
+
+<%= form_for @conn, @action, [as: :tweet], fn f -> %>
+
+  <div class="form-group">
+    <%= label f, :content, class: "control-label" %>
+    <%= text_input f, :content, class: "form-control" %>
+    <%= error_tag f, :content %>
+  </div>
+
+  <div>
+    <%= inputs_for f, :tweet_detail, fn ftd -> %>
+      <%= label ftd, :location, class: "control-label" %>
+      <%= text_input ftd, :location, class: "form-control" %>
+      <%= error_tag ftd, :location %>
+    <% end %>
+  </div>
+
+  <div class="form-group">
+    <%= submit "ツイートする", class: "btn btn-primary" %>
+  </div>
+
+<% end %>

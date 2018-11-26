@@ -4,7 +4,9 @@ defmodule StudyApp.Tweet do
   import Ecto.Changeset
 
   alias StudyApp.User
+  alias StudyApp.Tweet
   alias StudyApp.UserTweet
+  alias StudyApp.TweetDetail
 
   schema "tweets" do
     field :content, :string
@@ -13,6 +15,7 @@ defmodule StudyApp.Tweet do
 
     belongs_to :user, User
     many_to_many :likes, User, join_through: UserTweet
+    has_one :tweet_detail, TweetDetail
   
     timestamps()
   end
@@ -22,5 +25,11 @@ defmodule StudyApp.Tweet do
     |> cast(attrs, [:content, :created_by, :modified_by, :user_id])
     |> validate_required([:content, :created_by, :modified_by, :user_id])
     |> assoc_constraint(:user)
+  end
+
+  def changeset_with_tweet_detail(tweet, attrs) do
+    tweet
+    |> Tweet.changeset(attrs)
+    |> cast_assoc(:tweet_detail, with: &TweetDetail.changeset/2)
   end
 end
